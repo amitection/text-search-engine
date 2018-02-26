@@ -24,6 +24,12 @@
 			<artifactId>lucene-queryparser</artifactId>
 			<version>7.2.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-classification</artifactId>
+			<version>7.2.1</version>
+		</dependency>
+
 
 		<!-- Logging -->
 		<dependency>

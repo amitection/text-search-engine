@@ -1,4 +1,4 @@
-package com.ir.searchengine.content;
+package com.ir.searchengine.loaders;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +12,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.IndexableFieldType;
 
 import com.ir.searchengine.Constants;
 
@@ -42,7 +43,7 @@ public class ContentLoader {
 		return corpusCount;
 	}
 
-	public void loadContent() {
+	public void loadContentFromFile() {
 		String docId = "";
 		StringBuilder textAbstract = new StringBuilder();
 		String authors = "";
