@@ -22,10 +22,9 @@ public class SearchEngine {
 
 	}
 
-	public ScoreDoc[] fireQuery(Query query, Boolean printResults) {
+	public ScoreDoc[] fireQuery(Query query, Boolean printResults, int hitsPerPage) {
 		try {
 			// Search
-			int hitsPerPage = 10;
 			IndexReader reader = DirectoryReader.open(indexDir);
 			IndexSearcher searcher = new IndexSearcher(reader);
 

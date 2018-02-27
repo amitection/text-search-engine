@@ -5,12 +5,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 
 import com.ir.searchengine.Constants;
@@ -28,10 +32,21 @@ public class QueryLoader {
 	private Analyzer analyzer;
 	
 	private QueryParser qp;
+	
+	private MultiFieldQueryParser multiFieldQP;
 
 	public QueryLoader(String filename, Analyzer analyzer) {
 		this.qp = new QueryParser("content", analyzer);
 		this.qp.setAllowLeadingWildcard(true);
+		
+		
+		// Creating a multi field query parser
+		HashMap<String,Float> boosts = new HashMap<String,Float>();
+		boosts.put("title", 5f);
+		boosts.put("author", 1f);
+		boosts.put("content", 10f);
+		this.multiFieldQP = new MultiFieldQueryParser(new String[] {"title","author","content"}, analyzer, boosts);
+		multiFieldQP.setAllowLeadingWildcard(true);
 		
 		this.filename = filename;
 		this.analyzer = analyzer;
@@ -109,8 +124,11 @@ public class QueryLoader {
 	}
 
 	private Query createQuery(String queryId, String queryStr) throws IOException, ParseException {
+		Query q = null;
+		
+		q = multiFieldQP.parse(queryStr);
 		// Query for each field and combine them into a boolean OR query
-		Query q = this.qp.parse(queryStr);
+		// q = this.qp.parse(queryStr);
 		return q;
 	}
 

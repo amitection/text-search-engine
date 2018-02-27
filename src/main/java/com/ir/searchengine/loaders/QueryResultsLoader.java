@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.Query;
 
 public class QueryResultsLoader {
 
@@ -34,7 +32,7 @@ public class QueryResultsLoader {
 		for(Integer[] doc : docs) {
 			
 			// If lies in the lower range of relevancy then doc is more relevant
-			if(doc[1] <= relevanceBoundary) {
+			if(doc[1] <= relevanceBoundary && relevanceBoundary >= 0) {
 				relevantDocsList.add(doc[0]);
 			}
 		}
