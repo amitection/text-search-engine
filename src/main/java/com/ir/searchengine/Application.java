@@ -39,7 +39,7 @@ public class Application {
 		String s = currentRelativePath.toAbsolutePath().toString();
 		logger.info("Current relative path is: " + s);
 
-		String indexdirType = "indexdirType";
+		String indexdirType = "ramdir";
 		String analyzerType = null;
 		String sourceFolder = null;
 		String outputFolder = null;
