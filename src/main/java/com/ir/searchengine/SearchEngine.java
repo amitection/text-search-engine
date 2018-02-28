@@ -16,20 +16,22 @@ public class SearchEngine {
 	private static Logger logger = Logger.getLogger(SearchEngine.class);
 
 	private Directory indexDir;
+	private String scoring;
 
-	public SearchEngine(Directory indexDir) {
+	public SearchEngine(Directory indexDir, String scoring) {
 		this.indexDir = indexDir;
+		this.scoring = scoring;
 
 	}
 
-	public ScoreDoc[] fireQuery(Query query, Boolean printResults, int hitsPerPage) {
+	public ScoreDoc[] fireQuery(Query query, Boolean printResults, int hitsPerPage) throws Exception {
 		try {
 			// Search
 			IndexReader reader = DirectoryReader.open(indexDir);
 			IndexSearcher searcher = new IndexSearcher(reader);
 
 			// Scoring - Similarity
-			searcher.setSimilarity(Application.getSimilarity());
+			searcher.setSimilarity(Application.getSimilarity(scoring));
 
 			TopDocs docs = searcher.search(query, hitsPerPage);
 			ScoreDoc[] hits = docs.scoreDocs;

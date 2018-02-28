@@ -13,8 +13,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 
 import com.ir.searchengine.Constants;
@@ -29,13 +27,13 @@ public class QueryLoader {
 
 	private Integer queryCount = 0;
 
-	private Analyzer analyzer;
 	
 	private QueryParser qp;
 	
 	private MultiFieldQueryParser multiFieldQP;
 
 	public QueryLoader(String filename, Analyzer analyzer) {
+		
 		this.qp = new QueryParser("content", analyzer);
 		this.qp.setAllowLeadingWildcard(true);
 		
@@ -48,8 +46,7 @@ public class QueryLoader {
 		this.multiFieldQP = new MultiFieldQueryParser(new String[] {"title","author","content"}, analyzer, boosts);
 		multiFieldQP.setAllowLeadingWildcard(true);
 		
-		this.filename = filename;
-		this.analyzer = analyzer;
+		this.filename = filename+"/cran.qry";
 		
 		this.queries = new ArrayList<>();
 	}
@@ -119,7 +116,7 @@ public class QueryLoader {
 	}
 	
 	public Query createQuery(String queryStr) throws ParseException {
-		Query q = this.qp.parse(queryStr);
+		Query q = this.multiFieldQP.parse(queryStr);
 		return q;
 	}
 

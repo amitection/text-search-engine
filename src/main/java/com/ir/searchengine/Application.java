@@ -13,7 +13,6 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.similarities.BM25Similarity;
@@ -34,15 +33,17 @@ public class Application {
 	private static String scoring = "scoring";
 	private static Similarity similarity = null;
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws Exception {
 
 		Path currentRelativePath = Paths.get("");
 		String s = currentRelativePath.toAbsolutePath().toString();
 		logger.info("Current relative path is: " + s);
 
 		String indexdirType = "indexdirType";
-		Boolean printResults = new Boolean(false);
 		String analyzerType = null;
+		String sourceFolder = null;
+		String outputFolder = null;
+		Boolean printResults = new Boolean(false);
 		int hitspp = 10;
 
 		for (int i = 0; i < args.length; i++) {
@@ -61,12 +62,26 @@ public class Application {
 			} else if ("-hitspp".equals(args[i])) {
 				if (args[i + 1] != null || !args[i + 1].equals(""))
 					hitspp = Integer.parseInt(args[i + 1]);
+				// else default = 10
+				
+				i++;
+			} else if ("-source".equals(args[i])) {
+				if (args[i + 1] != null || !args[i + 1].equals(""))
+					sourceFolder = args[i + 1];
+				else
+					throw new RuntimeException("Must specify source folder for CRAN.");
+				i++;
+			} else if ("-output".equals(args[i])) {
+				if (args[i + 1] != null || !args[i + 1].equals(""))
+					outputFolder = args[i + 1];
+				else
+					throw new RuntimeException("Output directory not present! Must specify as argument.");
 				i++;
 			}
 		}
 
 		// Load all the documents
-		ContentLoader cl = new ContentLoader(Constants.PATH_TO_CONTENT);
+		ContentLoader cl = new ContentLoader(sourceFolder);
 		cl.loadContentFromFile();
 		List<Document> docs = cl.getDocuments();
 
@@ -80,9 +95,9 @@ public class Application {
 		logger.debug("Successfully loaded (" + docs.size() + ") documents.");
 
 		// Instantiate the Search Engine
-		SearchEngine searchEngine = new SearchEngine(indexDir);
+		SearchEngine searchEngine = new SearchEngine(indexDir, scoring);
 
-		QueryLoader ql = new QueryLoader(Constants.PATH_TO_QUERIES, analyzer);
+		QueryLoader ql = new QueryLoader(sourceFolder, analyzer);
 		ql.loadQueries();
 		List<Query> queries = ql.getQueries();
 
@@ -90,7 +105,6 @@ public class Application {
 
 		int queryCount = 1;
 		for (Query query : queries) {
-			System.out.println("\n\nQuery No: " + queryCount);
 			ScoreDoc[] hits = searchEngine.fireQuery(query, printResults, hitspp);
 
 			for (int i = 0; i < hits.length; ++i) {
@@ -106,16 +120,16 @@ public class Application {
 
 		try {
 
-			new ResultWriter(results).writeResults();
+			new ResultWriter(results, outputFolder).writeResults();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public IndexWriterConfig getIndexWriterConfig(Analyzer analyzer, IndexWriterConfig.OpenMode openMode) {
+	public IndexWriterConfig getIndexWriterConfig(Analyzer analyzer, IndexWriterConfig.OpenMode openMode) throws Exception {
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		config.setOpenMode(openMode);
-		config.setSimilarity(Application.getSimilarity());
+		config.setSimilarity(Application.getSimilarity(scoring));
 		return config;
 	}
 
@@ -152,7 +166,7 @@ public class Application {
 		}
 	}
 
-	public static Similarity getSimilarity() {
+	public static Similarity getSimilarity(String scoring) throws Exception {
 
 		if ("bm25".equals(scoring)) {
 			// Checking for singleton
@@ -170,8 +184,9 @@ public class Application {
 			} else {
 				return similarity;
 			}
+		} else {
+			throw new Exception("Similarity cannot be null");
 		}
-		return null;
 	}
 
 }

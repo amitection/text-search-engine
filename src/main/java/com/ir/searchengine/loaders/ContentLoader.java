@@ -26,7 +26,7 @@ public class ContentLoader {
 	private Integer corpusCount = 0;
 
 	public ContentLoader(String filename) {
-		this.filename = filename;
+		this.filename = filename+"/cran.all.1400";
 		this.documents = new ArrayList<>();
 	}
 

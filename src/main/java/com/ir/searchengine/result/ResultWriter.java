@@ -1,6 +1,5 @@
 package com.ir.searchengine.result;
 
-import com.ir.searchengine.Constants;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
@@ -27,11 +26,14 @@ public class ResultWriter {
 	
 	String filename;
 
-	public ResultWriter(List<Result> results) throws IOException {
+	public ResultWriter(List<Result> results, String outputDir) throws IOException {
+		File dir = new File(outputDir);
+		createDirIfNotExists(dir);
+		
 		this.results = results;
 		this.currentTime = System.currentTimeMillis();
 		Date date = new Date();
-		this.filename = Constants.PATH_TO_WRITE_RESULTS + "res_"+sdf.format(date);
+		this.filename = outputDir + "/res_"+sdf.format(date);
 		
 		File file = new File(filename);
 		file.createNewFile();
@@ -43,7 +45,8 @@ public class ResultWriter {
 		try (Writer writer = Files
 				.newBufferedWriter(Paths.get(filename))) {
 			
-			StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer).withSeparator(' ')
+			StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer)
+					.withSeparator(' ')
 					.withQuotechar(CSVWriter.NO_QUOTE_CHARACTER).build();
 
 			beanToCsv.write(results);
@@ -54,6 +57,20 @@ public class ResultWriter {
 			e.printStackTrace();
 		} catch (CsvRequiredFieldEmptyException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void createDirIfNotExists(File dir) {
+		if (!dir.exists()) {
+		    System.out.println("Creating directory for Results file: " + dir.getName());
+		    boolean result = false;
+
+		    	dir.mkdir();
+		    	result = true;
+
+		    	if(result) {    
+		        System.out.println("DIR created");  
+		    }
 		}
 	}
 
