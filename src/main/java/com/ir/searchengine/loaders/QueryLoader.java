@@ -17,6 +17,7 @@ import org.apache.lucene.search.Query;
 
 import com.ir.searchengine.Constants;
 
+
 /** Helper class to load all the queries from a file to the memory.
  * @author amit
  */
@@ -47,7 +48,7 @@ public class QueryLoader {
 		boosts.put("author", 1f);
 		boosts.put("content", 10f);
 		this.multiFieldQP = new MultiFieldQueryParser(new String[] {"title","author","content"}, analyzer, boosts);
-		multiFieldQP.setAllowLeadingWildcard(true);
+		//multiFieldQP.setAllowLeadingWildcard(true);
 		
 		this.filename = filename+"/cran.qry";
 		
@@ -72,7 +73,10 @@ public class QueryLoader {
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-
+				
+				// Preprocess string for wildcards
+				line = removeWildCardIfAny(line);
+				
 				// Returns a new tag if found else null
 				String newTag = getTagIfAny(line);
 				if (newTag != null) {
@@ -146,4 +150,13 @@ public class QueryLoader {
 		return null;
 	}
 	
+	private String removeWildCardIfAny(String line) {
+		if(line.contains("?")) 
+			line = line.replace('?', ' ');
+		
+		if(line.contains("*")) 
+			line = line.replace('*', ' ');
+		
+		return line;
+	}
 }
