@@ -12,6 +12,10 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 
+/**
+ * Helper class that fires queries on the indexed documents.
+ * @author amit
+ */
 public class SearchEngine {
 	private static Logger logger = Logger.getLogger(SearchEngine.class);
 

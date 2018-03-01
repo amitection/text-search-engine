@@ -16,6 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/** Helper class to write results to a file.
+ * @author amit
+ */
 public class ResultWriter {
 
 	private static final DateFormat sdf = new SimpleDateFormat("yyyyMMdd_HH-mm-ss");

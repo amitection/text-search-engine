@@ -17,6 +17,9 @@ import org.apache.lucene.search.Query;
 
 import com.ir.searchengine.Constants;
 
+/** Helper class to load all the queries from a file to the memory.
+ * @author amit
+ */
 public class QueryLoader {
 
 	private static Logger logger = Logger.getLogger(QueryLoader.class);

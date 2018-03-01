@@ -12,6 +12,9 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 
 import com.ir.searchengine.filter.WildcardFilter;
 
+/** Analyzer developed taking the StandardAnalyzer as base.
+ * @author amit
+ */
 public class CustomAnalyzer extends Analyzer {
 
 	@Override

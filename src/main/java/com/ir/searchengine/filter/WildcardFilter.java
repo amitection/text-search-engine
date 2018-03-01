@@ -7,8 +7,10 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 /**
+ * Class that processes wildcards from the input document. Although this doesn't work because filters
+ * are called at a later stage than processing wildcards in lucene.<br /><br />
+ * Ref - https://www.toptal.com/database/full-text-search-of-dialogues-with-apache-lucene
  * @author amit
- *https://www.toptal.com/database/full-text-search-of-dialogues-with-apache-lucene
  */
 public class WildcardFilter extends TokenFilter {
 

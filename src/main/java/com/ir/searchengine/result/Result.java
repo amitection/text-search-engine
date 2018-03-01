@@ -1,6 +1,9 @@
 package com.ir.searchengine.result;
 
 
+/** POJO for Result.
+ * @author amit
+ */
 public class Result {
 
 	private String a_queryNumber;

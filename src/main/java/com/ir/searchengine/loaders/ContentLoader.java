@@ -15,6 +15,9 @@ import org.apache.lucene.document.TextField;
 
 import com.ir.searchengine.Constants;
 
+/** Helper class to load all the documents from the file to the main mem.
+ * @author amit
+ */
 public class ContentLoader {
 
 	private static Logger logger = Logger.getLogger(ContentLoader.class);

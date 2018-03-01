@@ -27,6 +27,10 @@ import com.ir.searchengine.loaders.QueryLoader;
 import com.ir.searchengine.result.Result;
 import com.ir.searchengine.result.ResultWriter;
 
+/**
+ * The main class that triggers the application.
+ * @author amit
+ */
 public class Application {
 
 	private static Logger logger = Logger.getLogger(Application.class);
